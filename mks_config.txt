@@ -1,4 +1,29 @@
-﻿#--------------------------------------------------------------------
+﻿#######################################################################
+# Target Machine:artillery3d Sidewinder X1 (tested with September 2019 model)
+# basefiles downloaded from: http://artillery3d.com/en/Content/490193.html
+# modified by: rob3dprint@gmail.com
+# modified: Dec/2019
+# --------------------- Disclaimer -------------------------------
+# Use at your own risk!
+# There are inherent dangers of upgrading your firmware and config files. We caution you to make sure that you completely understand the potential risks before applying/uploading any of the software to your 3d-Printer
+# This Software and Config Files  are provided "as is" without warranty of any kind, either express or implied.
+# All information is provided “as is”, with NO guarantees. There is NO warranty that:
+# - the software and config file  will be uninterrupted, timely, secure or error-free
+# - the software and config file will meet your requirements
+# - the results that may be obtained from the use of the software and config file will be effective, accurate or reliable
+# - the quality of the software and config files will meet your expectations
+# - any errors in the software and config files obtained will be corrected.
+#--------------------------------------------------------------------
+
+
+### robrob: TIP ###
+# For upgrading your MKS_TFT copy the following folders/files to the tft card: mks_font, mks_pic, mks_config, mkstft28. Reboot printer with SDCard inserted
+# For some of the features, like e.g. LiveAdjustZ and PID Tuning to work you also have to flash the modified Marlin Firmware bundled with this release.
+#
+# if you have only modified this file (mks_config.txt), e.g. with your own preheat temps,  you can upload it standalone to your SDCard and boot from it. That's faster.
+
+
+
 #########  Printer type setting  ##################################
 
 #mainboard firmware setting(marlin:1; repetier:2; smoothie:3)
@@ -91,10 +116,10 @@ It will auto heat up if the current temp doesn't reach the target.
 >cfg_point_number:5
 
 #the coordinates of 5 point on manual leveling
->cfg_point1:45,45
->cfg_point2:175,45
->cfg_point3:175,175
->cfg_point4:45,175
+>cfg_point1:45,175
+>cfg_point2:175,175
+>cfg_point3:175,45
+>cfg_point4:45,45
 >cfg_point5:110,110
 
 #the travel speed of leveling(mm/min)
@@ -141,36 +166,62 @@ It will auto heat up if the current temp doesn't reach the target.
 #command of user-defined function
 >function_btn1_cmd:M84;
 
+#black M42 P4 S0;M42 P5 S0;M42 P6 S0;
+#white M42 P4 S255;M42 P5 S255;M42 P6 S255;
+#red M42 P4 S0;M42 P5 S255;M42 P6 S0;
+#green M42 P4 S255;M42 P5 S0;M42 P6 S0;
+#blue M42 P4 S0;M42 P5 S0;M42 P6 S255;
 
-#set number of  "More" button 
->moreitem_pic_cnt:5
+#set number of  "More" button
+>moreitem_pic_cnt:7
+#the files are named: bmp_custom1..7
+#edit command for 1~7 "More" button, each command must be separated by semicolon
+ 
+#########################################
+#Autotuning for nozzle, you can change temps or use M303 E-1 S60 C8 U1 for BED instead, dont forget to do M500 to save
+>moreitem_button1_cmd:M42 P4 S0;M42 P5 S255;M42 P6 S0;M106 S127;M303 S220 C8 U1;M42 P4 S255;M107;M42 P5 S0;M42 P6 S0;M500;M42 P4 S0;M42 P5 S255;M42 P6 S0;M106 S127;M303 E-1 S60 C8 U1;M500;M42 P4 S255;M107;M42 P5 S0;M42 P6 S0;
 
-#edit command for 1~7 "More" button,each command must be separated by semicolon ";"
->moreitem_button1_cmd:M42 P4 S0;M42 P5 S0;M42 P6 S0;
+#Manuel Bed Level: Homing, All Motors but Z Off
+>moreitem_button2_cmd:M42 P4 S0;M42 P5 S0;M42 P6 S255;G28;G1 Z0;M18 S600;M18 X Y E; M42 P4 S255;M42 P5 S0;M42 P6 S0;
 
->moreitem_button2_cmd:M42 P4 S255;M42 P5 S255;M42 P6 S255;
+ LiveAdjustZ+
+>moreitem_button3_cmd:M290 Z0.025;M42 P4 S255;M42 P5 S0;M42 P6 S0;
 
->moreitem_button3_cmd:M42 P4 S0;M42 P5 S255;M42 P6 S0;
+#SaveToEEPROM
+>moreitem_button4_cmd:M42 P4 S0;M42 P5 S255;M42 P6 S0;M500;G4 S1;M42 P4 S255;M42 P5 S0;M42 P6 S0;
 
->moreitem_button4_cmd:M42 P4 S255;M42 P5 S0;M42 P6 S0;
+#PreHeat PLA
+>moreitem_button5_cmd:M42 P4 S0;M42 P5 S0;M42 P6 S255;M104 S210; M140 S60; G4 P500;M42 P4 S255;M42 P5 S0;M42 P6 S0;
 
->moreitem_button5_cmd:M42 P4 S0;M42 P5 S0;M42 P6 S255;
+#PreHeat PETG
+>moreitem_button6_cmd:M42 P4 S0;M42 P5 S0;M42 P6 S255;M104 S240; M140 S85; G4 P500;M42 P4 S255;M42 P5 S0;M42 P6 S0;
 
->moreitem_button6_cmd:G28 Z0;
+#LiveAdjustZ-
+>moreitem_button7_cmd:M290 Z-0.025;M42 P4 S0;M42 P5 S0;M42 P6 S255;
+#########################################
 
->moreitem_button7_cmd:G28;
 
 #how many "More" button display on screen interface
->morefunc_cnt:2
+>morefunc_cnt:5
 
+#RobRob: these buttons are available once a printjob is started
+#the files are named: bmp_morefunc1..6
 #command setting on button1~6
+#########################################
+#LightsOut
 >morefunc1_cmd:M42 P4 S0;M42 P5 S0;M42 P6 S0;
+#Lights On (White)
 >morefunc2_cmd:M42 P4 S255;M42 P5 S255;M42 P6 S255;
->morefunc3_cmd:G28;
->morefunc4_cmd:G28;
->morefunc5_cmd:G28;
+#LiveAdjustZ+
+>morefunc3_cmd:M290 Z0.025;M42 P4 S255;M42 P5 S0;M42 P6 S0;
+#LiveAdjustZ-
+>morefunc4_cmd:M290 Z-0.025;M42 P4 S0;M42 P5 S0;M42 P6 S255;
+#SaveToEEPROM
+>morefunc5_cmd:M42 P4 S0;M42 P5 S255;M42 P6 S0;M500;G4 S1;M42 P4 S255;M42 P5 S0;M42 P6 S0;
+#not used currently
 >morefunc6_cmd:G28;
 
+#########################################
 #---------------------------------------------------------------------------------
 ##### Display Customization(button and logo customized see User's Manual) #######
 
@@ -199,7 +250,7 @@ It will auto heat up if the current temp doesn't reach the target.
 >cfg_printingstat_word_color:0xFFFFFF
 
 #3D effects setting (disable: 0; enable: 1)
->cfg_BUTTON_3D_effects:1
+>cfg_BUTTON_3D_effects:0
 
 #The screen is flipped 180°(0: no flip, 1: flip)
 >cfg_OVERTURN_180:0
