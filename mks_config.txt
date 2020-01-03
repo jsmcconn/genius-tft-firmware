@@ -1,5 +1,5 @@
 ﻿#######################################################################
-# Target Machine:artillery3d Sidewinder X1 (tested with September 2019 model)
+# Target Machine:artillery3d Genius
 # basefiles downloaded from: http://artillery3d.com/en/Content/490193.html
 # modified by: rob3dprint@gmail.com
 # modified: Dec/2019
